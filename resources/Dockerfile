@@ -14,6 +14,6 @@ FROM alpine:latest
 RUN apk update && apk add tini ca-certificates 
 WORKDIR /opt/
 COPY --from=builder /go/src/github.com/luojun/k8s-admission-webhook-opt/build/bin/* ./
-COPY --from=builder /go/src/github.com/luojun/k8s-admission-webhook-opt/resources/scripts/entrypoints.sh /
+COPY --from=builder /go/src/github.com/luojun/k8s-admission-webhook-opt/resources/scripts/entrypoint.sh /
 ENV PATH /opt/:$PATH
 ENTRYPOINT ["/sbin/tini", "--", "/entrypoints.sh"]
