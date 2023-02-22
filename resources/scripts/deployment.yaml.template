@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admission-webhook-server
+  namespace: admission-webhook
+  labels:
+    app: admission-webhook-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: admission-webhook-server
+  template:
+    metadata:
+      labels:
+        app: admission-webhook-server
+    spec:
+      containers:
+      - name: server
+        image: luojun/k8s-admission-webhook-server:latest
+        ports:
+        - containerPort: 8443
+        volumeMounts:
+        - name: tls-certs
+          mountPath: /run/secrets/tls
+          readOnly: true
+      volumes:
+      - name: tls-certs
+        secret:
+          secretName: admission-webhook-server-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admission-webhook-server
+  namespace: admission-webhook
+spec:
+  selector:
+    app: admission-webhook-server
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: 8443
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: admission-webhook-opt
+webhooks:
+  - name: admission-webhook-server.admission-webhook.svc
+    sideEffects: None
+    admissionReviewVersions: ["v1", "v1beta1"]
+    clientConfig:
+      service:
+        name: admission-webhook-server
+        namespace: admission-webhook
+        path: "/mutate"
+      caBundle: ${CA_PEM_B64}
+    rules:
+      - operations: [ "CREATE" ]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
