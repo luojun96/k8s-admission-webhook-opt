@@ -79,7 +79,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle("/mutate", admitFuncHandler(applyAdmissionMutationOpertation))
-	mux.Handle("/ready", readinessCheckHandler)
+	mux.Handle("/ready", readinessCheckHandler())
 	server := &http.Server{
 		Addr:    ":8443",
 		Handler: mux,
