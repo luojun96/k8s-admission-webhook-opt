@@ -20,6 +20,11 @@ spec:
         image: luojun/k8s-admission-webhook-server:latest
         ports:
         - containerPort: 8443
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8443
+          periodSeconds: 5
         volumeMounts:
         - name: tls-certs
           mountPath: /run/secrets/tls
