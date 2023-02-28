@@ -22,8 +22,15 @@ spec:
         - containerPort: 8443
         readinessProbe:
           httpGet:
-            path: /ready
+            path: /healthz
             port: 8443
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8443
+          initialDelaySeconds: 15
           periodSeconds: 5
         volumeMounts:
         - name: tls-certs

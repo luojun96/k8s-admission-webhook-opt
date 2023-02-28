@@ -9,13 +9,13 @@ import (
 	"time"
 )
 
-func readinessCheckHandler() http.Handler {
+func healthCheckHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		serveReadinessCheckFunc(w, r)
+		serveHealthCheckFunc(w, r)
 	})
 }
 
-func serveReadinessCheckFunc(w http.ResponseWriter, r *http.Request) {
+func serveHealthCheckFunc(w http.ResponseWriter, r *http.Request) {
 	log.Print("Handling readiness check request ... ")
 	var writeErr error
 	err := doDNSResolveCheck("kubernetes.default.svc", 50*time.Millisecond)
