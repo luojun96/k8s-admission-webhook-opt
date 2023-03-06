@@ -6,7 +6,7 @@ metadata:
   labels:
     app: admission-webhook-server
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: admission-webhook-server
@@ -23,14 +23,14 @@ spec:
         readinessProbe:
           httpGet:
             path: /healthz
-            port: 8443
+            port: 8080
           initialDelaySeconds: 15
           timeoutSeconds: 30
           periodSeconds: 5
         livenessProbe:
           httpGet:
             path: /healthz
-            port: 8443
+            port: 8080 
           initialDelaySeconds: 60
           periodSeconds: 5
         volumeMounts:

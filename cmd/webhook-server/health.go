@@ -9,6 +9,15 @@ import (
 	"time"
 )
 
+func newHealthCheckServer() *http.Server {
+	mux := http.NewServeMux()
+	mux.Handle("/healthz", healthCheckHandler())
+	return &http.Server{
+		Addr:    ":8080",
+		Handler: mux,
+	}
+}
+
 func healthCheckHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		serveHealthCheckFunc(w, r)
@@ -18,8 +27,7 @@ func healthCheckHandler() http.Handler {
 func serveHealthCheckFunc(w http.ResponseWriter, r *http.Request) {
 	log.Print("Handling readiness check request ... ")
 	var writeErr error
-	// err := doDNSResolveCheck("kubernetes.default.svc", 50*time.Millisecond)
-	err := doDummyCheck()
+	err := doDNSResolveCheck("kubernetes.default.svc", 50*time.Millisecond)
 	if err != nil {
 		log.Printf("Error handling readiness check request: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)

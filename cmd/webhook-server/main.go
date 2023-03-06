@@ -79,11 +79,13 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle("/mutate", admitFuncHandler(applyAdmissionMutationOpertation))
-	mux.Handle("/healthz", healthCheckHandler())
 	server := &http.Server{
 		Addr:    ":8443",
 		Handler: mux,
 	}
+
+	// run health check api asynchronously
+	go newHealthCheckServer().ListenAndServe()
 
 	log.Fatal(server.ListenAndServeTLS(certPath, keyPath))
 }
