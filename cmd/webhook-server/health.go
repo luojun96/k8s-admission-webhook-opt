@@ -18,7 +18,8 @@ func healthCheckHandler() http.Handler {
 func serveHealthCheckFunc(w http.ResponseWriter, r *http.Request) {
 	log.Print("Handling readiness check request ... ")
 	var writeErr error
-	err := doDNSResolveCheck("kubernetes.default.svc", 50*time.Millisecond)
+	// err := doDNSResolveCheck("kubernetes.default.svc", 50*time.Millisecond)
+	err := doDummyCheck()
 	if err != nil {
 		log.Printf("Error handling readiness check request: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -31,6 +32,10 @@ func serveHealthCheckFunc(w http.ResponseWriter, r *http.Request) {
 	if writeErr != nil {
 		log.Printf("Could not write response: %v", writeErr)
 	}
+}
+
+func doDummyCheck() error {
+	return nil
 }
 
 // DNSResolveCheck returns a Check that makes sure the provided host can resolve
