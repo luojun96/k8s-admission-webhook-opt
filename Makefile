@@ -25,6 +25,9 @@ endif
 SOURCE = $(shell find ${MKFILE_DIR} -type f -name "*.go")
 TARGET = ${RELEASE_DIR}/webhook-server
 
+# docker
+DOCKER_IMAGE_NAME := luojun/k8s-admission-webhook-server
+TAG := latest
 all: ${TARGET}
 
 ${TARGET}: ${SOURCE}
@@ -38,7 +41,7 @@ test:
 	go test -gcflags=-l -cover -race ${TEST_GLAGS} -v ./...
 
 docker:
-	DOCKER_BUILDKIT=1 docker build -t luojun/k8s-admission-webhook-server -f ${MKFILE_DIR}/resources/Dockerfile ${MKFILE_DIR}
+	DOCKER_BUILDKIT=1 docker build -t ${DOCKER_IMAGE_NAME}:${TAG} -f ${MKFILE_DIR}/resources/Dockerfile ${MKFILE_DIR}
 
 clean:
 	@rm -rf ${MKFILE_DIR}/build
