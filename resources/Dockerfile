@@ -1,4 +1,4 @@
-FROM golang:1.20.1-alpine as builder
+FROM golang:1.20.3-alpine as builder
 WORKDIR /go/src/github.com/luojun/k8s-admission-webhook-opt
 COPY ./ /go/src/github.cim/luojun/k8s-admission-webhook-opt
 RUN --mount=type=cache,target=/var/cache/apk \
