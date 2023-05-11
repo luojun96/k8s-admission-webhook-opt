@@ -3,6 +3,7 @@ SHELL:=/bin/sh
 
 export GO111MODULE=on
 
+
 # Path Related
 MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR := $(dir $(MKFILE_PATH))
